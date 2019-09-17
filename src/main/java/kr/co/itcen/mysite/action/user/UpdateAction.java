@@ -43,10 +43,7 @@ public class UpdateAction implements Action {
 		
 		new UserDao().update(vo);
 		
-		vo.setPassword("");
-		vo.setEmail(authUser.getEmail());
-		
-		session.setAttribute("authUser", vo);
+		authUser.setName(name);
 		
 		WebUtils.redirect(request, response, request.getContextPath());		
 	}

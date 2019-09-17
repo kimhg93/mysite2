@@ -38,25 +38,5 @@
   <servlet-mapping>
     <servlet-name>GuestbookServlet</servlet-name>
     <url-pattern>/guestbook</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>MainSevlet</display-name>
-    <servlet-name>MainSevlet</servlet-name>
-    <servlet-class>kr.co.itcen.mysite.action.main.MainSevlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>MainSevlet</servlet-name>
-    <url-pattern>/MainSevlet</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>MainServelt</display-name>
-    <servlet-name>MainServelt</servlet-name>
-    <servlet-class>kr.co.itcen.mysite.action.main.MainServelt</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>MainServelt</servlet-name>
-    <url-pattern>/MainServelt</url-pattern>
-  </servlet-mapping>
+  </servlet-mapping> 
 </web-app>
