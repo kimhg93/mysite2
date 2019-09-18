@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/includes/jstl.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<link href="<%=request.getContextPath() %>/assets/css/user.css" rel="stylesheet" type="text/css">
+<link href="${path }/assets/css/user.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<div id="container">
@@ -13,7 +14,7 @@
 		<div id="content">
 			<div id="user">
 
-				<form id="join-form" name="joinForm" method="post" action="<%=request.getContextPath() %>/user">
+				<form id="join-form" name="joinForm" method="post" action="${path }/user">
 					<input type="hidden" name="a" value="join" />
 					<label class="block-label" for="name">이름</label>
 					<input id="name" name="name" type="text" value="">
