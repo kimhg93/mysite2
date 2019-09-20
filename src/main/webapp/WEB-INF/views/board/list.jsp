@@ -54,13 +54,11 @@
 				<!-- pager 추가 -->
 				<div class="pager">
 					<ul>
-						<li><a href="">◀</a></li>
-						<li><a href="">1</a></li>
-						<li class="selected">2</li>
-						<li><a href="">3</a></li>
-						<li>4</li>
-						<li>5</li>
-						<li><a href="">▶</a></li>
+						<li><a href="${path }/board?a=list&page=${startPage-1}&pagef=prev">◀</a></li>
+						<c:forEach begin="${startPage }" end="${lastPage }" step="1" var="i">
+							<li><a href="${path }/board?a=list&page=${i }">${i }</a></li>
+						</c:forEach>
+						<li><a href="${path }/board?a=list&page=${lastPage+1 }&pagef=next">▶</a></li>
 					</ul>
 				</div>					
 				<!-- pager 추가 -->

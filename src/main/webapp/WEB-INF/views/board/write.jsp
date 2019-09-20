@@ -15,6 +15,7 @@
 			<div id="board">
 				<form class="board-form" method="post" action="${path }/board">
 					<input type = "hidden" name = "a" value="write">
+					<input type = "hidden" name = "removed" value="false">
 					<input type = "hidden" name = "flag" value="${flag }">
 					<c:if test="${flag == 1}">
 						<input type="hidden" name="gno" value="${groupVo.groupNo }">

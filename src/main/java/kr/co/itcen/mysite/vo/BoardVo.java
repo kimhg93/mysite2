@@ -14,7 +14,7 @@ public class BoardVo {
 	private boolean removed;
 	
 	
-	public boolean isRemoved() {
+	public boolean getRemoved() {
 		return removed;
 	}
 	public void setRemoved(boolean removed) {

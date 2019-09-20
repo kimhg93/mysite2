@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kr.co.itcen.mysite.vo.BoardVo;
-import kr.co.itcen.mysite.vo.GuestBookVo;
-import kr.co.itcen.mysite.vo.UserVo;
 
 public class BoardDao {
 	private Connection getConnection() throws SQLException {
@@ -31,7 +29,7 @@ public class BoardDao {
 		try {
 			connection = getConnection();
 
-			String sql = "insert into board values(null, ?, ?, 0, now(), ?, ?, ?, ?, null)";
+			String sql = "insert into board values(null, ?, ?, 0, now(), ?, ?, ?, ?, ?)";
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setString(1, vo.getTitle());
 			pstmt.setString(2, vo.getContents());
@@ -39,6 +37,7 @@ public class BoardDao {
 			pstmt.setInt(4, vo.getOrderNo());
 			pstmt.setInt(5, vo.getDepth());
 			pstmt.setLong(6, vo.getUserNo());
+			pstmt.setBoolean(7, vo.getRemoved());
 			
 			pstmt.executeUpdate();		
 								
@@ -136,8 +135,13 @@ public class BoardDao {
 								+ " b.no, b.user_no, b.depth, b.g_no, b.removed"								
 								+ " from user a, board b"
 								+ " where a.no = b.user_no "+ like 
+								+ " and ((b.removed = true"
+								+ " and ((select count(*) from board where g_no = b.g_no > 1)"
+								+ " or (b.depth <> (select max(depth) from board where g_no = b.g_no ))))"
+								+ " or b.removed = false)"
 								+ " order by b.g_no desc, o_no asc"
 								+ " limit ?, ?";
+			
 			pstmt = connection.prepareStatement(sql);			
 				pstmt.setInt(1, (page-1)*5 );
 				pstmt.setInt(2, 5);
@@ -385,5 +389,41 @@ public class BoardDao {
 			}
 		}		
 		return countGroup;
+	}
+	
+	public int countAll() {
+		Connection connection = null;		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int count=0;
+		try {
+			connection = getConnection();
+
+			String sql = "select count(*) from board";
+			pstmt = connection.prepareStatement(sql);	
+			rs = pstmt.executeQuery();		
+			
+			if(rs.next()) {
+				count = rs.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("error: " + e);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		return count;
 	}
 }

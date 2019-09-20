@@ -20,11 +20,39 @@ public class ListAction implements Action {
 		HttpSession session = request.getSession(true);
 		
 		int page = 1;
-		if(request.getParameter("page")!=null) {
+		if("".equals(request.getParameter("page"))||request.getParameter("page")==null) {
+			page = 1;			
+		} else {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
 				
 		String keyWord = request.getParameter("kwd");
+		
+		/////////////////
+				
+		String pageFunction = request.getParameter("pagef");		
+		int countAll = new BoardDao().countAll();
+		int pageAll = countAll%5==0?countAll/5:countAll/5+1;
+		
+		int startPage = (page%5)==0?((page/5)-1)*5+1:((page/5)*5)+1;
+		int lastPage = startPage + 4;
+		if("next".equals(pageFunction)) {
+			startPage= page;
+			lastPage= startPage+4;
+		} else if("prev".equals(pageFunction)) {
+			startPage= page-4;
+			lastPage= page;
+		}
+		
+		if(pageAll<lastPage) {
+			lastPage = pageAll;
+		}
+		
+		request.setAttribute("startPage", startPage);
+		request.setAttribute("lastPage", lastPage);
+		
+		//////////////////
+		
 		
 		List<BoardVo> list =  new BoardDao().getList(page, keyWord);
 		int countGroup = 0;
@@ -35,5 +63,8 @@ public class ListAction implements Action {
 		} else {
 			WebUtils.forward(request, response, "/WEB-INF/views/board/list.jsp");
 		}
+		
+		
+		
 	}
 }

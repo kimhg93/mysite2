@@ -26,11 +26,13 @@ public class WriteAction implements Action {
 		
 		String title = request.getParameter("title");
 		String contents = request.getParameter("contents");
+		boolean removed = Boolean.parseBoolean(request.getParameter("removed"));
 				
 		BoardVo vo = new BoardVo();	
 		vo.setUserNo(userNo);
 		vo.setTitle(title);
 		vo.setContents(contents);
+		vo.setRemoved(removed);
 		
 		if(flag==1) {
 			int gNo = Integer.parseInt(request.getParameter("gno"));
