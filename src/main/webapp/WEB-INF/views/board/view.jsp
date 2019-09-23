@@ -33,13 +33,14 @@
 				</table>				
 					<div class="bottom">
 					<a href="${path }/board?a=list&kwd=${param.kwd}&page=${param.page }">글목록</a>
+						<a href="${path }/board?a=writeform&no=${viewVo.no }">답글</a>
 						<c:choose>
 							<c:when test="${viewVo.userNo==authUser.no}">
 								<a href="${path }/board?a=modifyform&no=${viewVo.no }">글수정</a>								
 							</c:when>
 							<c:otherwise>								
-								<a href="${path }/board?a=writeform&no=${viewVo.no }">답글</a>
-						</c:otherwise>
+							
+							</c:otherwise>
 						</c:choose>
 					</div>				
 			</div>

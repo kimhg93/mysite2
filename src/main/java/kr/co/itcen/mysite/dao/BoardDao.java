@@ -10,7 +10,8 @@ import java.util.List;
 
 import kr.co.itcen.mysite.vo.BoardVo;
 
-public class BoardDao {
+
+public class BoardDao {	
 	private Connection getConnection() throws SQLException {
 		Connection connection = null;
 		try {
@@ -120,7 +121,7 @@ public class BoardDao {
 			}
 		}		
 	}
-	public List<BoardVo> getList(int page, String keyWord) {
+	public List<BoardVo> getList(int page, int showCont, String keyWord) {
 		List<BoardVo> list = new ArrayList<BoardVo>();
 		Connection connection = null;		
 		PreparedStatement pstmt = null;
@@ -131,20 +132,18 @@ public class BoardDao {
 			if(keyWord!=null) {
 				like= "and (title like '%"+keyWord+"%' or contents like '%"+keyWord+"%')";
 			}
+			
 			String sql = "select b.title, a.name, b.hit, date_format(b.reg_date, '%Y-%m-%d %H:%i:%s'),"
 								+ " b.no, b.user_no, b.depth, b.g_no, b.removed"								
 								+ " from user a, board b"
 								+ " where a.no = b.user_no "+ like 
-								+ " and ((b.removed = true"
-								+ " and ((select count(*) from board where g_no = b.g_no > 1)"
-								+ " or (b.depth <> (select max(depth) from board where g_no = b.g_no ))))"
-								+ " or b.removed = false)"
+								+ " and "+  getWhere()
 								+ " order by b.g_no desc, o_no asc"
-								+ " limit ?, ?";
+								+ " limit ?, ?";			
 			
 			pstmt = connection.prepareStatement(sql);			
-				pstmt.setInt(1, (page-1)*5 );
-				pstmt.setInt(2, 5);
+				pstmt.setInt(1, (page-1)*showCont);
+				pstmt.setInt(2, showCont);
 			
 			rs = pstmt.executeQuery();		
 			while(rs.next()) {
@@ -399,7 +398,8 @@ public class BoardDao {
 		try {
 			connection = getConnection();
 
-			String sql = "select count(*) from board";
+			String sql = "select count(*) from board b where " +  getWhere();
+			
 			pstmt = connection.prepareStatement(sql);	
 			rs = pstmt.executeQuery();		
 			
@@ -425,5 +425,56 @@ public class BoardDao {
 			}
 		}		
 		return count;
+	}
+	public int countAll(String keyWord) {
+		Connection connection = null;		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int count=0;
+		try {
+			connection = getConnection();			
+			String sql = "select count(*) from board b where "
+					+ " (title like '%"+keyWord+"%' or contents like '%"+keyWord+"%')"
+					+ " and " + getWhere();
+			
+			pstmt = connection.prepareStatement(sql);	
+			rs = pstmt.executeQuery();		
+			
+			if(rs.next()) {
+				count = rs.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("error: " + e);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		return count;
+	}
+	
+	private String getWhere() {
+		String where = "((b.removed = true and 0 <(select count(*) from board where"
+				+ " g_no = b.g_no and depth > b.o_no and o_no > b.depth"
+				+ " and o_no < (select o_no from board"
+				+ " where g_no = b.g_no and o_no > b.o_no and depth = b.depth"
+				+ " order by o_no asc limit 0, 1)) and removed = false and"
+				+ " (((select count(*) from board where g_no = b.g_no) > 1 )" 
+				+ " and (b.depth < (select max(depth) from board where g_no = b.g_no and removed = false)))" 
+				+ " and ((select count(*) from board where g_no = b.g_no and  depth >= b.depth) <>" 
+				+ " (select count(*) from board where g_no = b.g_no and depth >= b.depth and removed =  true)))" 
+				+ " or b.removed = false)";
+		return where;
 	}
 }

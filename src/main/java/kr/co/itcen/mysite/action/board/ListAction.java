@@ -14,50 +14,58 @@ import kr.co.itcen.web.WebUtils;
 import kr.co.itcen.web.mvc.Action;
 
 public class ListAction implements Action {
-
+	private static final int SHOW_PAGE = 5;
+	private static final int SHOW_CNT = 20;
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession(true);
+		HttpSession session = request.getSession(true);		
+		BoardDao boardDao = new BoardDao();
+		int currentPage = 1;
 		
-		int page = 1;
 		if("".equals(request.getParameter("page"))||request.getParameter("page")==null) {
-			page = 1;			
+			currentPage = 1;			
 		} else {
-			page = Integer.parseInt(request.getParameter("page"));
-		}
-				
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		}				
+		
 		String keyWord = request.getParameter("kwd");
 		
-		/////////////////
-				
-		String pageFunction = request.getParameter("pagef");		
-		int countAll = new BoardDao().countAll();
-		int pageAll = countAll%5==0?countAll/5:countAll/5+1;
+		int countAll = boardDao.countAll();		
+		if(keyWord!=null) { 
+			countAll = boardDao.countAll(keyWord); 
+		}
+		 
 		
-		int startPage = (page%5)==0?((page/5)-1)*5+1:((page/5)*5)+1;
-		int lastPage = startPage + 4;
-		if("next".equals(pageFunction)) {
-			startPage= page;
-			lastPage= startPage+4;
-		} else if("prev".equals(pageFunction)) {
-			startPage= page-4;
-			lastPage= page;
+		/////////////////
+		String pageMove = request.getParameter("move");	
+		
+		
+		int pageAll = countAll%SHOW_CNT==0 ? countAll/SHOW_CNT : countAll/SHOW_CNT+1;		
+		int startPage = (currentPage%SHOW_PAGE)==0 ? ((currentPage/SHOW_PAGE)-1)*SHOW_PAGE+1 : ((currentPage/SHOW_PAGE)*SHOW_PAGE)+1;
+		int lastPage = startPage + SHOW_PAGE-1;
+		
+		if("next".equals(pageMove)) {
+			startPage= currentPage;
+			lastPage= startPage+(SHOW_PAGE-1);
+		} else if("prev".equals(pageMove)) {
+			startPage= currentPage-(SHOW_PAGE-1);
+			lastPage= currentPage;
 		}
 		
 		if(pageAll<lastPage) {
 			lastPage = pageAll;
 		}
 		
+		request.setAttribute("countAll", countAll-(currentPage-1)*SHOW_CNT);
+		System.out.println(countAll);
+		request.setAttribute("pageAll", pageAll);
 		request.setAttribute("startPage", startPage);
-		request.setAttribute("lastPage", lastPage);
-		
+		request.setAttribute("lastPage", lastPage);		
 		//////////////////
 		
 		
-		List<BoardVo> list =  new BoardDao().getList(page, keyWord);
-		int countGroup = 0;
+		List<BoardVo> list =  boardDao.getList(currentPage, SHOW_CNT, keyWord);
 		request.setAttribute("list", list);		
-		request.setAttribute("countGroup", countGroup);
 		if(session.getAttribute("authUser")==null) {
 			WebUtils.redirect(request, response, request.getContextPath()+"/user?a=loginform");
 		} else {

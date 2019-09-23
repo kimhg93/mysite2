@@ -26,10 +26,9 @@
 						<th>작성일</th>
 						<th>&nbsp;</th>
 					</tr>				
-					<c:set var="count" value="${fn:length(list) }"/>
 					<c:forEach items="${list }" var="vo" varStatus="status">	
 					<tr>
-						<td>${count-status.index }</td>
+						<td>${countAll-status.index }</td>
 						<td style="padding-left:${30*vo.depth-20}px;text-align:left">
 							<c:if test="${vo.depth > 0 }">
 								<img src="${path }/assets/images/reply.png"/>
@@ -54,11 +53,23 @@
 				<!-- pager 추가 -->
 				<div class="pager">
 					<ul>
-						<li><a href="${path }/board?a=list&page=${startPage-1}&pagef=prev">◀</a></li>
+						<c:if test="${param.page-5>=1 }">
+							<li><a href="${path }/board?a=list&page=${startPage-1}&move=prev&kwd=${param.kwd}">◀</a></li>
+						</c:if>						
 						<c:forEach begin="${startPage }" end="${lastPage }" step="1" var="i">
-							<li><a href="${path }/board?a=list&page=${i }">${i }</a></li>
+							<c:choose>
+								<c:when test="${param.page==i }">
+									<li><span style="font-size:16px">${i }</span></li>
+								</c:when>	
+								<c:otherwise>
+									<li><a href="${path }/board?a=list&page=${i }&kwd=${param.kwd}">${i }</a></li>
+								</c:otherwise>
+							</c:choose>								
 						</c:forEach>
-						<li><a href="${path }/board?a=list&page=${lastPage+1 }&pagef=next">▶</a></li>
+						<c:if test="${pageAll >= startPage+5 }">
+							<li><a href="${path }/board?a=list&page=${lastPage+1 }&move=next&kwd=${param.kwd}">▶</a></li>
+						</c:if>
+						
 					</ul>
 				</div>					
 				<!-- pager 추가 -->
