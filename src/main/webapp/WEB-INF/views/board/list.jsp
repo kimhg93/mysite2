@@ -10,7 +10,7 @@
 </head>
 <body>
 	<div id="container">
-		<jsp:include page="/WEB-INF/views/includes/header.jsp" />
+		<c:import url="/WEB-INF/views/includes/header.jsp" />
 		<div id="content">
 			<div id="board">
 				<form id="search_form" action="${path }/board?a=list&page=1" method="post">
@@ -35,7 +35,7 @@
 							</c:if>							
 							<c:choose>
 								<c:when test="${vo.removed==false}">
-									<a href="${path }/board?a=view&no=${vo.no }&kwd=${param.keyWord }&page=${param.page }">${vo.title }</a>							
+									<a href="${path }/board?a=view&no=${vo.no }&kwd=${param.kwd }&page=${param.page }">${vo.title }</a>							
 								</c:when>								
 								<c:when test="${vo.removed==true}">								
 									<span>삭제된 글</span>	
@@ -79,8 +79,8 @@
 				</div>				
 			</div>
 		</div>
-		<jsp:include page="/WEB-INF/views/includes/navigation.jsp" />
-		<jsp:include page="/WEB-INF/views/includes/footer.jsp" />
+		<c:import url="/WEB-INF/views/includes/navigation.jsp" />
+		<c:import url="/WEB-INF/views/includes/footer.jsp" />
 	</div>
 </body>
 </html>

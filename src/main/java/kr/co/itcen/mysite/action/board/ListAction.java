@@ -15,7 +15,7 @@ import kr.co.itcen.web.mvc.Action;
 
 public class ListAction implements Action {
 	private static final int SHOW_PAGE = 5;
-	private static final int SHOW_CNT = 20;
+	private static final int SHOW_CNT = 5;
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(true);		

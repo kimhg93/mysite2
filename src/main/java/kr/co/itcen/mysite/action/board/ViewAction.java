@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import kr.co.itcen.mysite.dao.BoardDao;
+import kr.co.itcen.mysite.dao.ReplyDao;
 import kr.co.itcen.mysite.vo.BoardVo;
 import kr.co.itcen.web.WebUtils;
 import kr.co.itcen.web.mvc.Action;
@@ -23,7 +24,7 @@ public class ViewAction implements Action {
 		viewVo.setNo(no);
 		
 		request.setAttribute("viewVo", viewVo);
-		
+		request.setAttribute("reply", new ReplyDao().getList(no));
 		WebUtils.forward(request, response, "/WEB-INF/views/board/view.jsp");
 	}
 
