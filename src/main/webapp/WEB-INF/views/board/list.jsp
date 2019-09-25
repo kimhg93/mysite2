@@ -75,7 +75,9 @@
 				<!-- pager 추가 -->
 				
 				<div class="bottom">
-					<a href="${path }/board?a=writeform" id="new-book">글쓰기</a>
+					<c:if test="${authUser.no!=null}">
+						<a href="${path }/board?a=writeform" id="new-book">글쓰기</a>
+					</c:if>
 				</div>				
 			</div>
 		</div>

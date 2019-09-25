@@ -183,7 +183,7 @@ public class BoardDao {
 		return list;
 	}
 	
-	public void upOderNo(int gNo, int oNo) {
+	public void updateOderNo(int gNo, int oNo) {
 		Connection connection = null;		
 		PreparedStatement pstmt = null;
 		try {
@@ -282,7 +282,7 @@ public class BoardDao {
 		return result;
 	}
 	
-	public void upHit(Long no, int hit) {
+	public void updateHit(Long no, int hit) {
 		Connection connection = null;		
 		PreparedStatement pstmt = null;
 		try {

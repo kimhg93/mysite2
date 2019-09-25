@@ -19,7 +19,7 @@ public class ViewAction implements Action {
 		BoardDao boardDao = new BoardDao();
 		Long no = Long.parseLong(request.getParameter("no"));
 		BoardVo viewVo = boardDao.getView(no);
-		boardDao.upHit(no, viewVo.getHit()+1);
+		boardDao.updateHit(no, viewVo.getHit()+1);
 		
 		viewVo.setNo(no);
 		

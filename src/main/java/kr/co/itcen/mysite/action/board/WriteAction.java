@@ -43,7 +43,7 @@ public class WriteAction implements Action {
 			vo.setOrderNo(oNo);
 			vo.setDepth(depth);
 			
-			boardDao.upOderNo(gNo, oNo);
+			boardDao.updateOderNo(gNo, oNo);
 		} else {
 			int groupNo = boardDao.getGno();
 			vo.setGroupNo(groupNo+1);

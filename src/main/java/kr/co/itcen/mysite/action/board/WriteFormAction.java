@@ -18,7 +18,6 @@ public class WriteFormAction implements Action {
 		if(request.getParameter("no")!=null){
 			Long no = Long.parseLong(request.getParameter("no"));
 			BoardVo groupVo = new BoardDao().getGroup(no);
-			System.out.println("test");
 			request.setAttribute("flag", 1);
 			request.setAttribute("groupVo", groupVo);
 		} else {	

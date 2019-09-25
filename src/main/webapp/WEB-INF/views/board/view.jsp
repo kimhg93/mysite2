@@ -22,7 +22,7 @@
 	.reply_tlt{
 		border-bottom:2px dotted black;
 		padding:0 0 5px 20px;
-		margin-bottom:5px;
+		margin-bottom:2px;
 	}
 </style>
 </head>
@@ -62,26 +62,28 @@
 								<input type="hidden" name="keyWord" value="${param.kwd}">
 								<input type="hidden" name="page" value="${param.page}">
 							</td>
-							<td colspan="2"><textarea name="contents" style="width:90%"></textarea></td>
+							<td colspan="2"><textarea name="contents" style="width:90%;resize:none"></textarea></td>
 							<td><input type="submit" value="등록"></td>	
 												
 						</tr>
 						</form>
 					</c:if>
-						<c:forEach items="${reply }" var="vo" varStatus="status">
+						<c:forEach items="${reply }" var="replyVo" varStatus="status">
 						<tr>
-							<td width="10%" align="center">${vo.userName }</td>
-							<td width="60%">${vo.contents }</td>
-							<td width="20%">${vo.regDate }</td>
+							<td width="10%" align="center">${replyVo.userName }</td>
+							<td width="60%">${fn:replace(replyVo.contents, newline, '<br>') }</td>
+							<td width="20%">${replyVo.regDate }</td>
 							<td width="10%">
 								<form name="deleteReply" method="post" action="${path}/board">
 									<input type="hidden" name="a" value="deleteReply">
 									<input type="hidden" name="boardNo" value="${param.no }">	
 									<input type="hidden" name="keyWord" value="${param.kwd}">
 									<input type="hidden" name="page" value="${param.page}">
-									<input type="hidden" name="replyNo" value="${vo.no}">
-									<input type="hidden" name="userNo" value="${vo.userNo }">
-									<input type="submit" class="del" value="삭제">
+									<input type="hidden" name="replyNo" value="${replyVo.no}">
+									<input type="hidden" name="userNo" value="${replyVo.userNo }">
+									<c:if test="${replyVo.userNo==authUser.no}">
+									<input type="submit" class="del" value="삭제" style="padding:2px">
+									</c:if>
 								</form>
 								
 							</td>
@@ -90,10 +92,12 @@
 					</table>			
 					<div class="bottom">
 					<a href="${path }/board?a=list&kwd=${param.kwd}&page=${param.page }">글목록</a>
-						<a href="${path }/board?a=writeform&no=${viewVo.no }">답글</a>
-							<c:if test="${viewVo.userNo==authUser.no}">
-								<a href="${path }/board?a=modifyform&no=${viewVo.no }">글수정</a>								
-							</c:if>
+						<c:if test="${authUser.no!=null}">
+							<a href="${path }/board?a=writeform&no=${viewVo.no }">답글</a>
+						</c:if>
+						<c:if test="${viewVo.userNo==authUser.no}">
+							<a href="${path }/board?a=modifyform&no=${viewVo.no }">글수정</a>								
+						</c:if>
 					</div>				
 			</div>
 			
